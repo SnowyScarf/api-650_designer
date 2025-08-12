@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Case Comparison - Acetic Acid Storage Tank Design Tool{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+            <i class="fas fa-balance-scale me-3"></i>
+            Case Comparison
+        </h1>
+        <p class="lead text-muted">
+            Compare multiple design cases side-by-side with percentage differences
+        </p>
+    </div>
+
+    {% if cases|length >= 2 %}
+    <!-- Cases Selection -->
+    <div class="row mb-4">
+        {% for case_name, case_data in cases.items() %}
+        <div class="col-md-6 mb-3">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>
+                        {{ case_name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">Production Rate</small>
+                            <p class="mb-1 fw-bold">{{ case_data.inputs.production_rate }} TPD</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Holding Period</small>
+                            <p class="mb-1 fw-bold">{{ case_data.inputs.holding_period }} days</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">Tank Size</small>
+                            <p class="mb-1 fw-bold">{{ case_data.results.dimensions.diameter }}×{{ case_data.results.dimensions.height }}m</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Shell Thickness</small>
+                            <p class="mb-1 fw-bold">{{ case_data.results.shell.shell_thickness }}mm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Detailed Comparison Table -->
+    <div class="card mb-5">
+        <div class="card-header bg-info text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-table me-2"></i>
+                Detailed Comparison
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Parameter</th>
+                            {% for case_name in cases.keys() %}
+                            <th class="text-center">{{ case_name }}</th>
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <th class="text-center">Difference (%)</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Input Parameters -->
+                        <tr class="table-secondary">
+                            <th colspan="{{ 3 if cases|length == 2 else cases|length + 1 }}">Input Parameters</th>
+                        </tr>
+                        <tr>
+                            <td>Production Rate (TPD)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ case_data.inputs.production_rate }}</td>
+                            {% set _ = case_values.append(case_data.inputs.production_rate) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-primary">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>Holding Period (days)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ case_data.inputs.holding_period }}</td>
+                            {% set _ = case_values.append(case_data.inputs.holding_period) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-primary">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+
+                        <!-- Design Results -->
+                        <tr class="table-secondary">
+                            <th colspan="{{ 3 if cases|length == 2 else cases|length + 1 }}">Design Results</th>
+                        </tr>
+                        <tr>
+                            <td>Tank Diameter (m)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ case_data.results.dimensions.diameter }}</td>
+                            {% set _ = case_values.append(case_data.results.dimensions.diameter) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-success">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>Tank Height (m)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ case_data.results.dimensions.height }}</td>
+                            {% set _ = case_values.append(case_data.results.dimensions.height) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-success">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>Shell Thickness (mm)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ case_data.results.shell.shell_thickness }}</td>
+                            {% set _ = case_values.append(case_data.results.shell.shell_thickness) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-warning">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>Total Volume (m³)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ "%.1f"|format(case_data.results.storage.total_volume) }}</td>
+                            {% set _ = case_values.append(case_data.results.storage.total_volume) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-info">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>Bund Volume (m³)</td>
+                            {% set case_values = [] %}
+                            {% for case_name, case_data in cases.items() %}
+                            <td class="text-center">{{ "%.1f"|format(case_data.results.bund_volume) }}</td>
+                            {% set _ = case_values.append(case_data.results.bund_volume) %}
+                            {% endfor %}
+                            {% if cases|length == 2 %}
+                            <td class="text-center fw-bold text-secondary">
+                                {{ "%.1f"|format(((case_values[1] - case_values[0]) / case_values[0] * 100) if case_values[0] != 0 else 0) }}%
+                            </td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="text-center">
+        <a href="{{ url_for('design') }}" class="btn btn-primary me-2">
+            <i class="fas fa-plus me-2"></i>
+            New Calculation
+        </a>
+        <form method="POST" action="{{ url_for('clear_cases') }}" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Clear all saved cases?')">
+                <i class="fas fa-trash me-2"></i>
+                Clear All Cases
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <!-- No cases to compare -->
+    <div class="text-center">
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            You need at least 2 saved cases to perform a comparison.
+        </div>
+        <a href="{{ url_for('design') }}" class="btn btn-primary">
+            <i class="fas fa-calculator me-2"></i>
+            Start New Calculation
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

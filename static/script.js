@@ -215,8 +215,154 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Initialize unit converter
+    initializeUnitConverter();
+    
     console.log('Acetic Acid Tank Design Tool initialized successfully');
 });
+
+// Unit Converter Functions
+function initializeUnitConverter() {
+    // Volume conversions
+    const volumeInputs = {
+        m3: document.getElementById('volume-m3'),
+        liters: document.getElementById('volume-liters'),
+        gallons: document.getElementById('volume-gallons')
+    };
+    
+    Object.entries(volumeInputs).forEach(([unit, input]) => {
+        if (input) {
+            input.addEventListener('input', () => convertVolume(unit, input.value, volumeInputs));
+        }
+    });
+    
+    // Mass conversions
+    const massInputs = {
+        kg: document.getElementById('mass-kg'),
+        tonnes: document.getElementById('mass-tonnes'),
+        pounds: document.getElementById('mass-pounds')
+    };
+    
+    Object.entries(massInputs).forEach(([unit, input]) => {
+        if (input) {
+            input.addEventListener('input', () => convertMass(unit, input.value, massInputs));
+        }
+    });
+    
+    // Temperature conversions
+    const tempInputs = {
+        celsius: document.getElementById('temp-celsius'),
+        fahrenheit: document.getElementById('temp-fahrenheit'),
+        kelvin: document.getElementById('temp-kelvin')
+    };
+    
+    Object.entries(tempInputs).forEach(([unit, input]) => {
+        if (input) {
+            input.addEventListener('input', () => convertTemperature(unit, input.value, tempInputs));
+        }
+    });
+    
+    // Pressure conversions
+    const pressureInputs = {
+        bar: document.getElementById('pressure-bar'),
+        psi: document.getElementById('pressure-psi'),
+        kpa: document.getElementById('pressure-kpa')
+    };
+    
+    Object.entries(pressureInputs).forEach(([unit, input]) => {
+        if (input) {
+            input.addEventListener('input', () => convertPressure(unit, input.value, pressureInputs));
+        }
+    });
+}
+
+function convertVolume(fromUnit, value, inputs) {
+    if (!value || value === '') return;
+    const val = parseFloat(value);
+    
+    let m3Value;
+    switch (fromUnit) {
+        case 'm3':
+            m3Value = val;
+            break;
+        case 'liters':
+            m3Value = val / 1000;
+            break;
+        case 'gallons':
+            m3Value = val / 264.172; // US gallons
+            break;
+    }
+    
+    if (fromUnit !== 'm3' && inputs.m3) inputs.m3.value = m3Value.toFixed(3);
+    if (fromUnit !== 'liters' && inputs.liters) inputs.liters.value = (m3Value * 1000).toFixed(1);
+    if (fromUnit !== 'gallons' && inputs.gallons) inputs.gallons.value = (m3Value * 264.172).toFixed(1);
+}
+
+function convertMass(fromUnit, value, inputs) {
+    if (!value || value === '') return;
+    const val = parseFloat(value);
+    
+    let kgValue;
+    switch (fromUnit) {
+        case 'kg':
+            kgValue = val;
+            break;
+        case 'tonnes':
+            kgValue = val * 1000;
+            break;
+        case 'pounds':
+            kgValue = val / 2.20462;
+            break;
+    }
+    
+    if (fromUnit !== 'kg' && inputs.kg) inputs.kg.value = kgValue.toFixed(2);
+    if (fromUnit !== 'tonnes' && inputs.tonnes) inputs.tonnes.value = (kgValue / 1000).toFixed(3);
+    if (fromUnit !== 'pounds' && inputs.pounds) inputs.pounds.value = (kgValue * 2.20462).toFixed(2);
+}
+
+function convertTemperature(fromUnit, value, inputs) {
+    if (!value || value === '') return;
+    const val = parseFloat(value);
+    
+    let celsius;
+    switch (fromUnit) {
+        case 'celsius':
+            celsius = val;
+            break;
+        case 'fahrenheit':
+            celsius = (val - 32) * 5/9;
+            break;
+        case 'kelvin':
+            celsius = val - 273.15;
+            break;
+    }
+    
+    if (fromUnit !== 'celsius' && inputs.celsius) inputs.celsius.value = celsius.toFixed(2);
+    if (fromUnit !== 'fahrenheit' && inputs.fahrenheit) inputs.fahrenheit.value = (celsius * 9/5 + 32).toFixed(2);
+    if (fromUnit !== 'kelvin' && inputs.kelvin) inputs.kelvin.value = (celsius + 273.15).toFixed(2);
+}
+
+function convertPressure(fromUnit, value, inputs) {
+    if (!value || value === '') return;
+    const val = parseFloat(value);
+    
+    let barValue;
+    switch (fromUnit) {
+        case 'bar':
+            barValue = val;
+            break;
+        case 'psi':
+            barValue = val / 14.5038;
+            break;
+        case 'kpa':
+            barValue = val / 100;
+            break;
+    }
+    
+    if (fromUnit !== 'bar' && inputs.bar) inputs.bar.value = barValue.toFixed(3);
+    if (fromUnit !== 'psi' && inputs.psi) inputs.psi.value = (barValue * 14.5038).toFixed(2);
+    if (fromUnit !== 'kpa' && inputs.kpa) inputs.kpa.value = (barValue * 100).toFixed(1);
+}
 
 // Utility functions
 function formatNumber(num, decimals = 2) {
@@ -246,5 +392,9 @@ function showNotification(message, type = 'info') {
 // Export for use in other scripts
 window.TankDesignTool = {
     formatNumber,
-    showNotification
+    showNotification,
+    convertVolume,
+    convertMass,
+    convertTemperature,
+    convertPressure
 };

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="{{ session.get('theme', 'dark') }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +40,22 @@
                             <i class="fas fa-calculator me-1"></i>Design Tool
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('pfd') }}">
+                            <i class="fas fa-project-diagram me-1"></i>PFD
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('compare_cases') }}">
+                            <i class="fas fa-balance-scale me-1"></i>Compare
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm ms-2" onclick="toggleTheme()" id="themeToggle">
+                            <i class="fas fa-{{ 'sun' if session.get('theme', 'dark') == 'dark' else 'moon' }} me-1"></i>
+                            {{ 'Light' if session.get('theme', 'dark') == 'dark' else 'Dark' }}
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -59,6 +75,88 @@
             {% endif %}
         {% endwith %}
     </div>
+
+    <!-- Unit Conversion Sidebar -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="unitConverter">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Unit Converter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Volume Conversion -->
+            <div class="mb-4">
+                <h6 class="text-primary">Volume</h6>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="volume-m3" placeholder="m³">
+                    <span class="input-group-text">m³</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="volume-liters" placeholder="Liters">
+                    <span class="input-group-text">L</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="volume-gallons" placeholder="Gallons">
+                    <span class="input-group-text">gal</span>
+                </div>
+            </div>
+            
+            <!-- Mass Conversion -->
+            <div class="mb-4">
+                <h6 class="text-success">Mass</h6>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="mass-kg" placeholder="Kilograms">
+                    <span class="input-group-text">kg</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="mass-tonnes" placeholder="Tonnes">
+                    <span class="input-group-text">t</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="mass-pounds" placeholder="Pounds">
+                    <span class="input-group-text">lbs</span>
+                </div>
+            </div>
+            
+            <!-- Temperature Conversion -->
+            <div class="mb-4">
+                <h6 class="text-warning">Temperature</h6>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="temp-celsius" placeholder="Celsius">
+                    <span class="input-group-text">°C</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="temp-fahrenheit" placeholder="Fahrenheit">
+                    <span class="input-group-text">°F</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="temp-kelvin" placeholder="Kelvin">
+                    <span class="input-group-text">K</span>
+                </div>
+            </div>
+            
+            <!-- Pressure Conversion -->
+            <div class="mb-4">
+                <h6 class="text-info">Pressure</h6>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="pressure-bar" placeholder="Bar">
+                    <span class="input-group-text">bar</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="pressure-psi" placeholder="PSI">
+                    <span class="input-group-text">psi</span>
+                </div>
+                <div class="input-group mb-2">
+                    <input type="number" class="form-control" id="pressure-kpa" placeholder="kPa">
+                    <span class="input-group-text">kPa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unit Converter Toggle Button -->
+    <button class="btn btn-primary position-fixed bottom-0 end-0 m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#unitConverter">
+        <i class="fas fa-calculator me-1"></i>Units
+    </button>
 
     <!-- Main Content -->
     <main>
@@ -93,6 +191,40 @@
     
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <!-- Theme Toggle Script -->
+    <script>
+        function toggleTheme() {
+            fetch('/toggle_theme', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.documentElement.setAttribute('data-bs-theme', data.theme);
+                    const button = document.getElementById('themeToggle');
+                    const icon = button.querySelector('i');
+                    
+                    if (data.theme === 'dark') {
+                        icon.className = 'fas fa-sun me-1';
+                        button.innerHTML = '<i class="fas fa-sun me-1"></i>Light';
+                    } else {
+                        icon.className = 'fas fa-moon me-1';
+                        button.innerHTML = '<i class="fas fa-moon me-1"></i>Dark';
+                    }
+                    
+                    // Reload charts if they exist
+                    if (typeof Plotly !== 'undefined') {
+                        setTimeout(() => {
+                            const chartDiv = document.getElementById('thicknessChart');
+                            if (chartDiv) {
+                                Plotly.relayout(chartDiv, {
+                                    'paper_bgcolor': 'rgba(0,0,0,0)',
+                                    'plot_bgcolor': 'rgba(0,0,0,0)'
+                                });
+                            }
+                        }, 100);
+                    }
+                });
+        }
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>

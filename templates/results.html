@@ -261,6 +261,41 @@
         </div>
     </div>
 
+    <!-- Save Case Section -->
+    <div class="card border-0 mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-save me-2"></i>
+                Save Case for Comparison
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('save_case') }}" class="row align-items-end">
+                <div class="col-md-8 mb-3">
+                    <label for="case_name" class="form-label">Case Name</label>
+                    <input type="text" class="form-control" id="case_name" name="case_name" 
+                           placeholder="e.g., Case 1 - High Production" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button type="submit" class="btn btn-warning w-100">
+                        <i class="fas fa-save me-2"></i>
+                        Save Case
+                    </button>
+                </div>
+            </form>
+            
+            {% if session.get('saved_cases') %}
+            <div class="mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    You have {{ session.saved_cases|length }} saved case(s). 
+                    <a href="{{ url_for('compare_cases') }}" class="text-decoration-none">Compare them</a>
+                </small>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
     <!-- Export Options -->
     <div class="card border-0 mb-5">
         <div class="card-header bg-dark text-white">
@@ -271,7 +306,18 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
+                    <div class="d-grid">
+                        <a href="{{ url_for('export_csv') }}" class="btn btn-info btn-lg">
+                            <i class="fas fa-file-csv me-2"></i>
+                            Download CSV
+                        </a>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        Simple comma-separated values for data analysis
+                    </small>
+                </div>
+                <div class="col-md-4 mb-3">
                     <div class="d-grid">
                         <a href="{{ url_for('export_excel') }}" class="btn btn-success btn-lg">
                             <i class="fas fa-file-excel me-2"></i>
@@ -283,7 +329,7 @@
                     </small>
                 </div>
                 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="d-grid">
                         <a href="{{ url_for('export_pdf') }}" class="btn btn-danger btn-lg">
                             <i class="fas fa-file-pdf me-2"></i>
@@ -291,7 +337,7 @@
                         </a>
                     </div>
                     <small class="text-muted mt-2 d-block">
-                        Professional engineering report for documentation
+                        Professional engineering report with logo and chart
                     </small>
                 </div>
             </div>

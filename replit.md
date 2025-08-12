@@ -2,7 +2,44 @@
 
 ## Overview
 
-This is a professional Flask web application that automates the design of atmospheric storage tanks for concentrated acetic acid following API 650 standards. The application implements engineering calculations for tank design, provides interactive visualizations, and generates professional reports. It serves as an engineering calculator that takes process parameters (production rate, holding period) and calculates optimal tank specifications including dimensions, shell thickness, and material requirements using the API 650 One-Foot Method.
+This is a professional Flask web application that automates the design of atmospheric storage tanks for concentrated acetic acid following API 650 standards. The application has been enhanced with advanced features including custom branding, multi-chemical database, case comparison, interactive PFD, multiple export formats, dark/light theme toggle, and live unit conversion tools. It serves as a comprehensive engineering calculator that takes process parameters and calculates optimal tank specifications using API 650 One-Foot Method.
+
+## Recent Major Enhancements (August 2025)
+
+### Custom Branding System
+- Logo upload functionality for company/college branding
+- Custom company name integration in all reports
+- Professional branded PDF and Excel exports
+
+### Chemical Database Expansion
+- 11 pre-defined chemicals with complete properties
+- Automatic property updates based on chemical selection
+- Corrosivity ratings and material recommendations
+- Support for acetic acid, sulfuric acid, methanol, benzene, and more
+
+### Case Comparison Feature
+- Save multiple calculation cases for side-by-side comparison
+- Percentage difference calculations between cases
+- Session-based storage for comparison data
+- Professional comparison tables and analysis
+
+### Interactive Process Flow Diagram
+- SVG-based interactive PFD with hover tooltips
+- Equipment specifications and safety device details
+- Visual tank representations with design dimensions
+- Professional engineering symbols and legends
+
+### Enhanced Export Capabilities
+- CSV export for data analysis
+- Enhanced Excel reports with multiple sheets
+- PDF reports with embedded logos and static chart images
+- Professional formatting with company branding
+
+### User Experience Improvements
+- Dark/Light theme toggle with persistent preferences
+- Live unit conversion sidebar (volume, mass, temperature, pressure)
+- Auto-save form data in browser local storage
+- Enhanced responsive design and animations
 
 ## User Preferences
 
@@ -18,13 +55,16 @@ Preferred communication style: Simple, everyday language.
 - **Responsive Design**: Mobile-friendly layout with Bootstrap grid system
 
 ### Backend Architecture
-- **Framework**: Flask (Python 3.11) with modular structure
-- **Design Pattern**: MVC pattern with separate calculation module
+- **Framework**: Flask (Python 3.11) with modular structure and session management
+- **Design Pattern**: MVC pattern with separate calculation and database modules
 - **Core Components**:
-  - `app.py`: Main Flask application with routes for home, design form, and calculations
+  - `app.py`: Enhanced Flask application with 15+ routes for full functionality
   - `calculations.py`: TankDesignCalculator class implementing API 650 engineering calculations
+  - `chemical_database.py`: ChemicalDatabase class with 11 predefined chemicals
   - `main.py`: Application entry point
 - **Template Engine**: Jinja2 with inheritance-based template structure
+- **Session Management**: Flask sessions for case comparison, branding, and theme preferences
+- **File Upload**: Secure logo upload with validation and storage
 
 ### Calculation Engine
 - **Standards Compliance**: API 650 One-Foot Method for shell thickness calculations
@@ -36,15 +76,20 @@ Preferred communication style: Simple, everyday language.
   - Bund volume calculations (110% of largest tank)
 
 ### Data Processing and Export
-- **Excel Export**: pandas + openpyxl for structured data export
-- **PDF Generation**: reportlab for professional engineering reports
-- **Data Validation**: Client-side and server-side input validation with Flask's request handling
+- **Excel Export**: pandas + openpyxl for structured multi-sheet reports with branding
+- **PDF Generation**: reportlab for professional engineering reports with logos and charts
+- **CSV Export**: Simple comma-separated format for data analysis
+- **Data Validation**: Enhanced client-side and server-side input validation
+- **Case Management**: Session-based storage and comparison of multiple design cases
 
 ### User Interface Design
-- **Theme**: Dark theme with professional engineering aesthetics
-- **Navigation**: Bootstrap navbar with responsive collapse
-- **Forms**: Progressive enhancement with validation feedback
-- **Results Display**: Tabular data presentation with visual emphasis on key metrics
+- **Theme**: Switchable dark/light theme with user preference persistence
+- **Navigation**: Enhanced Bootstrap navbar with PFD and comparison links
+- **Forms**: Chemical selection dropdown with auto-property updates
+- **Results Display**: Enhanced tabular data with case saving and comparison features
+- **Interactive Elements**: Process Flow Diagram with hover tooltips and equipment details
+- **Unit Converter**: Always-available sidebar for live unit conversions
+- **Animations**: Smooth transitions and hover effects throughout the application
 
 ## External Dependencies
 

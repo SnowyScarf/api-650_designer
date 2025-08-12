@@ -13,9 +13,9 @@ class TankDesignCalculator:
     # Standard plate thicknesses (mm) - API 650 Appendix A
     STANDARD_THICKNESSES = [5, 6, 8, 10, 12, 16, 19, 22, 25, 28, 32, 38, 44, 50]
     
-    def __init__(self, production_rate, holding_period, density=1049, 
+    def __init__(self, production_rate, holding_period, density=1049.0, 
                  max_fill_fraction=0.85, corrosion_allowance=1.5, num_tanks=2,
-                 allowable_stress_design=138, allowable_stress_test=207):
+                 allowable_stress_design=138.0, allowable_stress_test=207.0):
         """
         Initialize tank design calculator.
         

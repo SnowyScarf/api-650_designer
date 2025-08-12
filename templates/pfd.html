@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}Process Flow Diagram - Acetic Acid Storage Tank Design Tool{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+            <i class="fas fa-project-diagram me-3"></i>
+            Process Flow Diagram
+        </h1>
+        <p class="lead text-muted">
+            Interactive process flow diagram with design details on hover
+        </p>
+    </div>
+
+    <!-- PFD Section -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-eye me-2"></i>
+                Acetic Acid Storage System
+            </h5>
+        </div>
+        <div class="card-body text-center">
+            <!-- Interactive SVG Process Flow Diagram -->
+            <svg id="pfdDiagram" width="100%" height="600" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background -->
+                <rect width="1000" height="600" fill="var(--bs-body-bg)" stroke="none"/>
+                
+                <!-- Feed Line -->
+                <line x1="50" y1="300" x2="200" y2="300" stroke="var(--bs-primary)" stroke-width="4" class="process-line" data-info="Feed Line: Acetic Acid Feed from Production"/>
+                <text x="125" y="290" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">Feed</text>
+                
+                <!-- Feed Pump -->
+                <circle cx="200" cy="300" r="25" fill="var(--bs-info)" stroke="var(--bs-primary)" stroke-width="2" class="equipment hover-item" data-bs-toggle="tooltip" title="Feed Pump: P-101, 10 kW, SS316L"/>
+                <text x="200" y="305" font-size="10" fill="white" text-anchor="middle" font-weight="bold">P-101</text>
+                <text x="200" y="340" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">Feed Pump</text>
+                
+                <!-- Line to Tank 1 -->
+                <line x1="225" y1="300" x2="350" y2="300" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                
+                <!-- Tank 1 -->
+                <g class="tank hover-item" data-bs-toggle="tooltip" title="Storage Tank T-101: {{ session.current_results.dimensions.diameter if session.current_results else '6.0' }}m × {{ session.current_results.dimensions.height if session.current_results else '3.5' }}m, {{ session.current_results.shell.shell_thickness if session.current_results else '8' }}mm shell">
+                    <rect x="350" y="200" width="120" height="200" fill="none" stroke="var(--bs-success)" stroke-width="3"/>
+                    <ellipse cx="410" cy="200" rx="60" ry="12" fill="none" stroke="var(--bs-success)" stroke-width="3"/>
+                    <ellipse cx="410" cy="400" rx="60" ry="12" fill="var(--bs-success)" fill-opacity="0.1" stroke="var(--bs-success)" stroke-width="3"/>
+                    
+                    <!-- Liquid level -->
+                    <rect x="350" y="240" width="120" height="140" fill="var(--bs-info)" fill-opacity="0.3"/>
+                    <ellipse cx="410" cy="240" rx="60" ry="12" fill="var(--bs-info)" fill-opacity="0.4" stroke="var(--bs-info)" stroke-width="2"/>
+                    
+                    <!-- Tank label -->
+                    <text x="410" y="320" font-size="14" fill="var(--bs-body-color)" text-anchor="middle" font-weight="bold">T-101</text>
+                    <text x="410" y="435" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">Storage Tank 1</text>
+                    
+                    <!-- Level indicator -->
+                    <rect x="480" y="200" width="15" height="200" fill="none" stroke="var(--bs-warning)" stroke-width="2" class="equipment"/>
+                    <rect x="482" y="240" width="11" height="140" fill="var(--bs-warning)" fill-opacity="0.6"/>
+                    <text x="512" y="300" font-size="10" fill="var(--bs-secondary)">LI-101</text>
+                </g>
+                
+                <!-- Tank 2 -->
+                <g class="tank hover-item" data-bs-toggle="tooltip" title="Storage Tank T-102: Same specifications as T-101">
+                    <rect x="550" y="200" width="120" height="200" fill="none" stroke="var(--bs-success)" stroke-width="3"/>
+                    <ellipse cx="610" cy="200" rx="60" ry="12" fill="none" stroke="var(--bs-success)" stroke-width="3"/>
+                    <ellipse cx="610" cy="400" rx="60" ry="12" fill="var(--bs-success)" fill-opacity="0.1" stroke="var(--bs-success)" stroke-width="3"/>
+                    
+                    <!-- Liquid level -->
+                    <rect x="550" y="260" width="120" height="120" fill="var(--bs-info)" fill-opacity="0.3"/>
+                    <ellipse cx="610" cy="260" rx="60" ry="12" fill="var(--bs-info)" fill-opacity="0.4" stroke="var(--bs-info)" stroke-width="2"/>
+                    
+                    <!-- Tank label -->
+                    <text x="610" y="320" font-size="14" fill="var(--bs-body-color)" text-anchor="middle" font-weight="bold">T-102</text>
+                    <text x="610" y="435" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">Storage Tank 2</text>
+                    
+                    <!-- Level indicator -->
+                    <rect x="680" y="200" width="15" height="200" fill="none" stroke="var(--bs-warning)" stroke-width="2" class="equipment"/>
+                    <rect x="682" y="260" width="11" height="120" fill="var(--bs-warning)" fill-opacity="0.6"/>
+                    <text x="712" y="300" font-size="10" fill="var(--bs-secondary)">LI-102</text>
+                </g>
+                
+                <!-- Distribution line to Tank 2 -->
+                <line x1="350" y1="280" x2="320" y2="280" stroke="var(--bs-primary)" stroke-width="3"/>
+                <line x1="320" y1="280" x2="320" y2="320" stroke="var(--bs-primary)" stroke-width="3"/>
+                <line x1="320" y1="320" x2="550" y2="320" stroke="var(--bs-primary)" stroke-width="3"/>
+                <line x1="550" y1="320" x2="550" y2="280" stroke="var(--bs-primary)" stroke-width="3"/>
+                
+                <!-- Control Valve -->
+                <polygon points="330,275 340,280 340,285 330,290 320,285 320,280" fill="var(--bs-warning)" stroke="var(--bs-primary)" stroke-width="2" class="equipment hover-item" data-bs-toggle="tooltip" title="Control Valve CV-101: Flow distribution control"/>
+                <text x="330" y="305" font-size="10" fill="var(--bs-secondary)" text-anchor="middle">CV-101</text>
+                
+                <!-- Output from Tank 1 -->
+                <line x1="410" y1="400" x2="410" y2="450" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                <line x1="410" y1="450" x2="750" y2="450" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                
+                <!-- Output from Tank 2 -->
+                <line x1="610" y1="400" x2="610" y2="430" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                <line x1="610" y1="430" x2="750" y2="430" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                
+                <!-- Merge point -->
+                <line x1="750" y1="430" x2="750" y2="450" stroke="var(--bs-primary)" stroke-width="4"/>
+                
+                <!-- Transfer Pump -->
+                <circle cx="800" cy="440" r="25" fill="var(--bs-info)" stroke="var(--bs-primary)" stroke-width="2" class="equipment hover-item" data-bs-toggle="tooltip" title="Transfer Pump P-102: 15 kW, Variable Speed, SS316L"/>
+                <text x="800" y="445" font-size="10" fill="white" text-anchor="middle" font-weight="bold">P-102</text>
+                <text x="800" y="480" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">Transfer Pump</text>
+                
+                <!-- Output line -->
+                <line x1="825" y1="440" x2="950" y2="440" stroke="var(--bs-primary)" stroke-width="4" class="process-line"/>
+                <text x="887" y="430" font-size="12" fill="var(--bs-secondary)" text-anchor="middle">To Process</text>
+                
+                <!-- Safety and Instrumentation -->
+                <!-- Pressure Relief on Tank 1 -->
+                <circle cx="410" cy="180" r="8" fill="var(--bs-danger)" stroke="var(--bs-dark)" stroke-width="1" class="equipment hover-item" data-bs-toggle="tooltip" title="Pressure Relief Valve PSV-101: Set at 0.5 barg"/>
+                <text x="410" y="165" font-size="10" fill="var(--bs-secondary)" text-anchor="middle">PSV-101</text>
+                
+                <!-- Pressure Relief on Tank 2 -->
+                <circle cx="610" cy="180" r="8" fill="var(--bs-danger)" stroke="var(--bs-dark)" stroke-width="1" class="equipment hover-item" data-bs-toggle="tooltip" title="Pressure Relief Valve PSV-102: Set at 0.5 barg"/>
+                <text x="610" y="165" font-size="10" fill="var(--bs-secondary)" text-anchor="middle">PSV-102</text>
+                
+                <!-- Vent lines -->
+                <line x1="410" y1="180" x2="410" y2="120" stroke="var(--bs-danger)" stroke-width="2" stroke-dasharray="5,5"/>
+                <line x1="610" y1="180" x2="610" y2="120" stroke="var(--bs-danger)" stroke-width="2" stroke-dasharray="5,5"/>
+                <line x1="400" y1="120" x2="620" y2="120" stroke="var(--bs-danger)" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="510" y="110" font-size="12" fill="var(--bs-danger)" text-anchor="middle">Vent Header</text>
+                
+                <!-- Bund/Containment -->
+                <rect x="300" y="480" width="420" height="80" fill="var(--bs-secondary)" fill-opacity="0.1" stroke="var(--bs-secondary)" stroke-width="2" stroke-dasharray="10,5" class="containment hover-item" data-bs-toggle="tooltip" title="Concrete Bund: {{ (session.current_results.bund_volume if session.current_results else 220) | round(0) }}m³ capacity (110% of largest tank)"/>
+                <text x="510" y="525" font-size="14" fill="var(--bs-secondary)" text-anchor="middle" font-weight="bold">Concrete Bund / Secondary Containment</text>
+                
+                <!-- Legend -->
+                <g id="legend" transform="translate(50, 50)">
+                    <rect x="0" y="0" width="180" height="120" fill="var(--bs-body-bg)" stroke="var(--bs-border-color)" stroke-width="1" rx="5"/>
+                    <text x="10" y="20" font-size="14" fill="var(--bs-body-color)" font-weight="bold">Legend</text>
+                    
+                    <line x1="10" y1="35" x2="30" y2="35" stroke="var(--bs-primary)" stroke-width="4"/>
+                    <text x="35" y="40" font-size="12" fill="var(--bs-body-color)">Process Lines</text>
+                    
+                    <circle cx="20" cy="55" r="8" fill="var(--bs-info)" stroke="var(--bs-primary)" stroke-width="1"/>
+                    <text x="35" y="60" font-size="12" fill="var(--bs-body-color)">Pumps</text>
+                    
+                    <rect x="12" y="70" width="16" height="16" fill="none" stroke="var(--bs-success)" stroke-width="2"/>
+                    <text x="35" y="82" font-size="12" fill="var(--bs-body-color)">Storage Tanks</text>
+                    
+                    <circle cx="20" cy="100" r="6" fill="var(--bs-danger)"/>
+                    <text x="35" y="105" font-size="12" fill="var(--bs-body-color)">Safety Devices</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Design Details Panel -->
+    <div class="row mb-5">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cogs me-2"></i>
+                        Equipment List
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tag</th>
+                                <th>Description</th>
+                                <th>Material</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>T-101</strong></td>
+                                <td>Storage Tank #1</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>T-102</strong></td>
+                                <td>Storage Tank #2</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P-101</strong></td>
+                                <td>Feed Pump</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P-102</strong></td>
+                                <td>Transfer Pump</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CV-101</strong></td>
+                                <td>Flow Control Valve</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PSV-101/102</strong></td>
+                                <td>Pressure Relief Valves</td>
+                                <td>SS316L</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LI-101/102</strong></td>
+                                <td>Level Indicators</td>
+                                <td>SS316L</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Safety Features
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Pressure Relief:</strong> PSV on each tank (0.5 barg)
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Level Monitoring:</strong> Continuous level indication
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Secondary Containment:</strong> Concrete bund (110% capacity)
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Material Selection:</strong> SS316L for corrosion resistance
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Vapor Handling:</strong> Common vent header system
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Flow Control:</strong> Automated distribution valve
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Emergency Isolation:</strong> Manual block valves (not shown)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center">
+        <a href="{{ url_for('design') }}" class="btn btn-primary me-2">
+            <i class="fas fa-calculator me-2"></i>
+            Design Tanks
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="fas fa-print me-2"></i>
+            Print PFD
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize tooltips for PFD elements
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Add hover effects for interactive elements
+        document.querySelectorAll('.hover-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.filter = 'brightness(1.2)';
+                this.style.cursor = 'pointer';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.filter = 'brightness(1.0)';
+            });
+        });
+    });
+</script>
+{% endblock %}
