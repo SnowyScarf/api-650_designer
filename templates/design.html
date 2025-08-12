@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Design Tool - Acetic Acid Storage Tank Design Tool{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary mb-3">
+                    <i class="fas fa-calculator me-3"></i>
+                    Tank Design Calculator
+                </h1>
+                <p class="lead text-muted">
+                    Enter your process parameters to calculate optimal tank specifications 
+                    following API 650 standards.
+                </p>
+            </div>
+
+            <!-- Design Form -->
+            <form method="POST" action="{{ url_for('calculate') }}" class="needs-validation" novalidate>
+                <!-- Process Parameters Card -->
+                <div class="card mb-4 border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-industry me-2"></i>
+                            Process Parameters
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="production_rate" class="form-label fw-bold">
+                                    Production Rate <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="production_rate" 
+                                           name="production_rate" step="0.1" min="0.1" required>
+                                    <span class="input-group-text">TPD</span>
+                                </div>
+                                <div class="form-text">Tonnes per day production rate</div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid production rate.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="holding_period" class="form-label fw-bold">
+                                    Holding Period <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="holding_period" 
+                                           name="holding_period" step="0.5" min="0.5" required>
+                                    <span class="input-group-text">days</span>
+                                </div>
+                                <div class="form-text">Storage duration in days</div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid holding period.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="density" class="form-label fw-bold">Liquid Density</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="density" 
+                                           name="density" value="1049" step="1" min="800" max="1200">
+                                    <span class="input-group-text">kg/m³</span>
+                                </div>
+                                <div class="form-text">Default: 1049 kg/m³ (concentrated acetic acid)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="max_fill_fraction" class="form-label fw-bold">Maximum Fill Fraction</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="max_fill_fraction" 
+                                           name="max_fill_fraction" value="85" step="1" min="70" max="95">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="form-text">Default: 85% (API 650 recommendation)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Parameters Card -->
+                <div class="card mb-4 border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tools me-2"></i>
+                            Design Parameters
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="corrosion_allowance" class="form-label fw-bold">Corrosion Allowance</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="corrosion_allowance" 
+                                           name="corrosion_allowance" value="1.5" step="0.1" min="0" max="10">
+                                    <span class="input-group-text">mm</span>
+                                </div>
+                                <div class="form-text">Default: 1.5mm (for acetic acid service)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="num_tanks" class="form-label fw-bold">Number of Tanks</label>
+                                <select class="form-select" id="num_tanks" name="num_tanks">
+                                    <option value="1">1 Tank</option>
+                                    <option value="2" selected>2 Tanks</option>
+                                    <option value="3">3 Tanks</option>
+                                    <option value="4">4 Tanks</option>
+                                </select>
+                                <div class="form-text">Default: 2 tanks (redundancy consideration)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Material Properties Card -->
+                <div class="card mb-4 border-0">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-atom me-2"></i>
+                            Material Properties (SS316L)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="sd" class="form-label fw-bold">Design Stress (Sd)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="sd" 
+                                           name="sd" value="138" step="1" min="100" max="200">
+                                    <span class="input-group-text">MPa</span>
+                                </div>
+                                <div class="form-text">Default: 138 MPa (SS316L at design temp)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="st" class="form-label fw-bold">Test Stress (St)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="st" 
+                                           name="st" value="207" step="1" min="150" max="300">
+                                    <span class="input-group-text">MPa</span>
+                                </div>
+                                <div class="form-text">Default: 207 MPa (SS316L hydro test)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Material Note:</strong> SS316L is recommended for acetic acid service due to 
+                            excellent corrosion resistance. Values shown are typical allowable stresses per API 650.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <button type="reset" class="btn btn-outline-secondary me-md-2">
+                        <i class="fas fa-undo me-2"></i>
+                        Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calculator me-2"></i>
+                        Calculate Tank Design
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Bootstrap form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

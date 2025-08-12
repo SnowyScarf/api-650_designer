@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+
+{% block title %}Results - Acetic Acid Storage Tank Design Tool{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+            <i class="fas fa-chart-bar me-3"></i>
+            Tank Design Results
+        </h1>
+        <p class="lead text-muted">
+            Professional tank specifications calculated per API 650 standards
+        </p>
+    </div>
+
+    <!-- Design Summary -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 text-center h-100">
+                <div class="card-body">
+                    <div class="text-primary mb-2">
+                        <i class="fas fa-droplet fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Total Storage</h5>
+                    <h3 class="text-primary">{{ "%.1f"|format(results.storage.total_volume) }}</h3>
+                    <small class="text-muted">m³ required</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 text-center h-100">
+                <div class="card-body">
+                    <div class="text-success mb-2">
+                        <i class="fas fa-arrows-alt fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Tank Size</h5>
+                    <h3 class="text-success">{{ results.dimensions.diameter }}×{{ results.dimensions.height }}</h3>
+                    <small class="text-muted">D×H (meters)</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 text-center h-100">
+                <div class="card-body">
+                    <div class="text-info mb-2">
+                        <i class="fas fa-layer-group fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Shell Thickness</h5>
+                    <h3 class="text-info">{{ results.shell.shell_thickness }}</h3>
+                    <small class="text-muted">mm (API 650)</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 text-center h-100">
+                <div class="card-body">
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">Bund Volume</h5>
+                    <h3 class="text-warning">{{ "%.1f"|format(results.bund_volume) }}</h3>
+                    <small class="text-muted">m³ (110%)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tank Specifications Table -->
+    <div class="card mb-5 border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-table me-2"></i>
+                Tank Specifications
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Tank No</th>
+                            <th>Chemical to Store</th>
+                            <th>Capacity (m³)</th>
+                            <th>Dimensions (D×H)</th>
+                            <th>Shell Thickness (mm)</th>
+                            <th>Bottom (mm)</th>
+                            <th>Roof (mm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tank in results.tank_specifications %}
+                        <tr>
+                            <td class="fw-bold">{{ tank.tank_no }}</td>
+                            <td>{{ tank.chemical }}</td>
+                            <td>{{ tank.capacity }}</td>
+                            <td>{{ tank.diameter }}×{{ tank.height }}</td>
+                            <td class="text-primary fw-bold">{{ tank.shell_thickness }}</td>
+                            <td>{{ tank.bottom_thickness }}</td>
+                            <td>{{ tank.roof_thickness }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tank Diagram and Interactive Chart -->
+    <div class="row mb-5">
+        <!-- Tank Diagram -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-eye me-2"></i>
+                        Tank Diagram
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Enhanced SVG Tank Diagram -->
+                    <svg width="100%" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Tank cylinder -->
+                        <rect x="75" y="80" width="150" height="180" fill="none" stroke="var(--bs-primary)" stroke-width="3"/>
+                        
+                        <!-- Tank top ellipse -->
+                        <ellipse cx="150" cy="80" rx="75" ry="12" fill="none" stroke="var(--bs-primary)" stroke-width="3"/>
+                        
+                        <!-- Tank bottom ellipse -->
+                        <ellipse cx="150" cy="260" rx="75" ry="12" fill="var(--bs-primary)" fill-opacity="0.1" stroke="var(--bs-primary)" stroke-width="3"/>
+                        
+                        <!-- Liquid level (85% fill) -->
+                        <rect x="75" y="107" width="150" height="153" fill="var(--bs-info)" fill-opacity="0.3"/>
+                        <ellipse cx="150" cy="107" rx="75" ry="12" fill="var(--bs-info)" fill-opacity="0.4" stroke="var(--bs-info)" stroke-width="2"/>
+                        
+                        <!-- Dimension lines and labels -->
+                        <!-- Height dimension -->
+                        <line x1="240" y1="80" x2="240" y2="260" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <line x1="235" y1="80" x2="245" y2="80" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <line x1="235" y1="260" x2="245" y2="260" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <text x="250" y="175" font-size="14" font-weight="bold" fill="var(--bs-secondary)">H={{ results.dimensions.height }}m</text>
+                        
+                        <!-- Diameter dimension -->
+                        <line x1="75" y1="280" x2="225" y2="280" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <line x1="75" y1="275" x2="75" y2="285" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <line x1="225" y1="275" x2="225" y2="285" stroke="var(--bs-secondary)" stroke-width="2"/>
+                        <text x="130" y="295" font-size="14" font-weight="bold" fill="var(--bs-secondary)">D={{ results.dimensions.diameter }}m</text>
+                        
+                        <!-- Shell thickness indication -->
+                        <line x1="75" y1="170" x2="65" y2="170" stroke="var(--bs-danger)" stroke-width="4"/>
+                        <text x="25" y="175" font-size="12" font-weight="bold" fill="var(--bs-danger)">t={{ results.shell.shell_thickness }}mm</text>
+                    </svg>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Cross-sectional view showing 85% fill level
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Interactive Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Shell Thickness vs Tank Height
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="thicknessChart" style="height: 300px;"></div>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-mouse-pointer me-1"></i>
+                            Interactive chart - hover for values, zoom and pan enabled
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Details -->
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-calculator me-2"></i>
+                        Calculation Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-6">Design Thickness:</dt>
+                        <dd class="col-sm-6">{{ results.shell.design_thickness }} mm</dd>
+                        
+                        <dt class="col-sm-6">Test Thickness:</dt>
+                        <dd class="col-sm-6">{{ results.shell.test_thickness }} mm</dd>
+                        
+                        <dt class="col-sm-6">Required Thickness:</dt>
+                        <dd class="col-sm-6">{{ results.shell.required_thickness }} mm</dd>
+                        
+                        <dt class="col-sm-6">Standard Thickness:</dt>
+                        <dd class="col-sm-6 fw-bold text-primary">{{ results.shell.shell_thickness }} mm</dd>
+                        
+                        <dt class="col-sm-6">D:H Ratio:</dt>
+                        <dd class="col-sm-6">1:{{ "%.2f"|format(results.dimensions.dh_ratio) }}</dd>
+                        
+                        <dt class="col-sm-6">Actual Volume:</dt>
+                        <dd class="col-sm-6">{{ "%.1f"|format(results.dimensions.actual_volume) }} m³</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Design Basis
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Code:</strong> API 650 - Welded Tanks for Oil Storage
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Method:</strong> One-Foot Shell Thickness Calculation
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Material:</strong> SS316L Stainless Steel
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Service:</strong> Concentrated Acetic Acid Storage
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Type:</strong> Atmospheric Storage Tank
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Safety Factor:</strong> Built into API 650 allowable stresses
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Options -->
+    <div class="card border-0 mb-5">
+        <div class="card-header bg-dark text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-download me-2"></i>
+                Export Options
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-grid">
+                        <a href="{{ url_for('export_excel') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-file-excel me-2"></i>
+                            Download Excel Report
+                        </a>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        Complete specifications and calculations in spreadsheet format
+                    </small>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="d-grid">
+                        <a href="{{ url_for('export_pdf') }}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-file-pdf me-2"></i>
+                            Download PDF Report
+                        </a>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        Professional engineering report for documentation
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center">
+        <a href="{{ url_for('design') }}" class="btn btn-outline-primary me-2">
+            <i class="fas fa-arrow-left me-2"></i>
+            New Calculation
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="fas fa-print me-2"></i>
+            Print Results
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Create interactive thickness chart using Plotly
+    document.addEventListener('DOMContentLoaded', function() {
+        var chartData = {{ chart_data | tojsonfilter }};
+        
+        var trace = {
+            x: chartData.heights,
+            y: chartData.thicknesses,
+            mode: 'lines+markers',
+            type: 'scatter',
+            name: 'Shell Thickness',
+            line: {
+                color: 'rgb(13, 202, 240)',
+                width: 3
+            },
+            marker: {
+                color: 'rgb(13, 202, 240)',
+                size: 8
+            }
+        };
+        
+        var layout = {
+            title: {
+                text: chartData.title,
+                font: { size: 16, color: 'var(--bs-body-color)' }
+            },
+            xaxis: {
+                title: chartData.x_title,
+                gridcolor: 'rgba(128,128,128,0.2)',
+                color: 'var(--bs-body-color)'
+            },
+            yaxis: {
+                title: chartData.y_title,
+                gridcolor: 'rgba(128,128,128,0.2)',
+                color: 'var(--bs-body-color)'
+            },
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: {
+                color: 'var(--bs-body-color)'
+            },
+            margin: {
+                l: 50, r: 50, t: 50, b: 50
+            }
+        };
+        
+        var config = {
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d'],
+            displaylogo: false
+        };
+        
+        Plotly.newPlot('thicknessChart', [trace], layout, config);
+    });
+</script>
+{% endblock %}
