@@ -50,12 +50,6 @@
                             <i class="fas fa-balance-scale me-1"></i>Compare
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-light btn-sm ms-2" onclick="toggleTheme()" id="themeToggle">
-                            <i class="fas fa-{{ 'sun' if session.get('theme', 'dark') == 'dark' else 'moon' }} me-1"></i>
-                            {{ 'Light' if session.get('theme', 'dark') == 'dark' else 'Dark' }}
-                        </button>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -192,39 +186,7 @@
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     
-    <!-- Theme Toggle Script -->
-    <script>
-        function toggleTheme() {
-            fetch('/toggle_theme', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    document.documentElement.setAttribute('data-bs-theme', data.theme);
-                    const button = document.getElementById('themeToggle');
-                    const icon = button.querySelector('i');
-                    
-                    if (data.theme === 'dark') {
-                        icon.className = 'fas fa-sun me-1';
-                        button.innerHTML = '<i class="fas fa-sun me-1"></i>Light';
-                    } else {
-                        icon.className = 'fas fa-moon me-1';
-                        button.innerHTML = '<i class="fas fa-moon me-1"></i>Dark';
-                    }
-                    
-                    // Reload charts if they exist
-                    if (typeof Plotly !== 'undefined') {
-                        setTimeout(() => {
-                            const chartDiv = document.getElementById('thicknessChart');
-                            if (chartDiv) {
-                                Plotly.relayout(chartDiv, {
-                                    'paper_bgcolor': 'rgba(0,0,0,0)',
-                                    'plot_bgcolor': 'rgba(0,0,0,0)'
-                                });
-                            }
-                        }, 100);
-                    }
-                });
-        }
-    </script>
+
     
     {% block scripts %}{% endblock %}
 </body>

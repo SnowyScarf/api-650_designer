@@ -472,14 +472,7 @@ def clear_cases():
     flash('All saved cases cleared successfully!', 'success')
     return redirect(url_for('design'))
 
-@app.route('/toggle_theme', methods=['POST'])
-def toggle_theme():
-    """Toggle between light and dark theme."""
-    current_theme = session.get('theme', 'dark')
-    new_theme = 'light' if current_theme == 'dark' else 'dark'
-    session['theme'] = new_theme
-    session.modified = True
-    return jsonify({'theme': new_theme})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

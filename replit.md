@@ -36,7 +36,7 @@ This is a professional Flask web application that automates the design of atmosp
 - Professional formatting with company branding
 
 ### User Experience Improvements
-- Dark/Light theme toggle with persistent preferences
+- Professional dark theme design
 - Live unit conversion sidebar (volume, mass, temperature, pressure)
 - Auto-save form data in browser local storage
 - Enhanced responsive design and animations
@@ -83,7 +83,7 @@ Preferred communication style: Simple, everyday language.
 - **Case Management**: Session-based storage and comparison of multiple design cases
 
 ### User Interface Design
-- **Theme**: Switchable dark/light theme with user preference persistence
+- **Theme**: Professional dark theme with engineering aesthetics
 - **Navigation**: Enhanced Bootstrap navbar with PFD and comparison links
 - **Forms**: Chemical selection dropdown with auto-property updates
 - **Results Display**: Enhanced tabular data with case saving and comparison features
