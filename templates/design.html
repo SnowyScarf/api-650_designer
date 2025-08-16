@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Design Tool - Acetic Acid Storage Tank Design Tool{% endblock %}
+{% block title %}Design Tool - API 650 Designer{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container my-5" style="padding-top: 56px;">
     <div class="row">
-        <div class="col-lg-8 mx-auto">
+        <div class="col-lg-10 mx-auto">
             <!-- Header -->
             <div class="text-center mb-5">
                 <h1 class="display-5 fw-bold text-primary mb-3">
@@ -13,18 +13,17 @@
                     Tank Design Calculator
                 </h1>
                 <p class="lead text-muted">
-                    Enter your process parameters to calculate optimal tank specifications 
+                    Enter your process parameters to calculate optimal tank specifications
                     following API 650 standards.
                 </p>
             </div>
 
             <!-- Design Form -->
             <form method="POST" action="{{ url_for('calculate') }}" class="needs-validation" novalidate>
-                <!-- Process Parameters Card -->
-                <div class="card mb-4 border-0">
-                    <div class="card-header bg-primary text-white">
+                <div class="card mb-4 border-light shadow-sm">
+                    <div class="card-header">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-industry me-2"></i>
+                            <i class="fas fa-industry me-2 text-primary"></i>
                             Process Parameters
                         </h5>
                     </div>
@@ -35,7 +34,7 @@
                                     Production Rate <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="production_rate" 
+                                    <input type="number" class="form-control" id="production_rate"
                                            name="production_rate" step="0.1" min="0.1" required>
                                     <span class="input-group-text">TPD</span>
                                 </div>
@@ -44,13 +43,13 @@
                                     Please provide a valid production rate.
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="holding_period" class="form-label fw-bold">
                                     Holding Period <span class="text-danger">*</span>
                                 </label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="holding_period" 
+                                    <input type="number" class="form-control" id="holding_period"
                                            name="holding_period" step="0.5" min="0.5" required>
                                     <span class="input-group-text">days</span>
                                 </div>
@@ -60,14 +59,14 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="chemical_select" class="form-label fw-bold">Chemical Selection</label>
-                                <select class="form-select" id="chemical_select" name="chemical_select" onchange="updateChemicalProperties()">
+                                <select class="form-select" id="chemical_select" name="chemical_name" onchange="updateChemicalProperties()">
                                     <option value="">Select Chemical</option>
                                     {% for chem_id, chem_name in chemicals %}
-                                    <option value="{{ chem_id }}" {% if chem_id == 'acetic_acid' %}selected{% endif %}>{{ chem_name }}</option>
+                                    <option value="{{ chem_id }}">{{ chem_name }}</option>
                                     {% endfor %}
                                 </select>
                                 <div class="form-text">Select from database or enter custom values below</div>
@@ -75,17 +74,17 @@
                             <div class="col-md-6 mb-3">
                                 <label for="density" class="form-label fw-bold">Liquid Density</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="density" 
-                                           name="density" value="1049" step="1" min="800" max="1200">
+                                    <input type="number" class="form-control" id="density"
+                                           name="density" value="1000" step="1" min="1">
                                     <span class="input-group-text">kg/m³</span>
                                 </div>
-                                <div class="form-text" id="density-info">Default: 1049 kg/m³ (concentrated acetic acid)</div>
+                                <div class="form-text" id="density-info">Default: 1000 kg/m³ (water)</div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="max_fill_fraction" class="form-label fw-bold">Maximum Fill Fraction</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="max_fill_fraction" 
+                                    <input type="number" class="form-control" id="max_fill_fraction"
                                            name="max_fill_fraction" value="85" step="1" min="70" max="95">
                                     <span class="input-group-text">%</span>
                                 </div>
@@ -96,26 +95,26 @@
                 </div>
 
                 <!-- Design Parameters Card -->
-                <div class="card mb-4 border-0">
-                    <div class="card-header bg-success text-white">
+                <div class="card mb-4 border-light shadow-sm">
+                    <div class="card-header">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-tools me-2"></i>
+                            <i class="fas fa-tools me-2 text-primary"></i>
                             Design Parameters
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="corrosion_allowance" class="form-label fw-bold">Corrosion Allowance</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="corrosion_allowance" 
+                                    <input type="number" class="form-control" id="corrosion_allowance"
                                            name="corrosion_allowance" value="1.5" step="0.1" min="0" max="10">
                                     <span class="input-group-text">mm</span>
                                 </div>
-                                <div class="form-text" id="corrosion-info">Default: 1.5mm (for acetic acid service)</div>
+                                <div class="form-text" id="corrosion-info">Default: 1.5mm</div>
                             </div>
-                            
-                            <div class="col-md-6 mb-3">
+
+                            <div class="col-md-4 mb-3">
                                 <label for="num_tanks" class="form-label fw-bold">Number of Tanks</label>
                                 <select class="form-select" id="num_tanks" name="num_tanks">
                                     <option value="1">1 Tank</option>
@@ -123,47 +122,18 @@
                                     <option value="3">3 Tanks</option>
                                     <option value="4">4 Tanks</option>
                                 </select>
-                                <div class="form-text">Default: 2 tanks (redundancy consideration)</div>
+                                <div class="form-text">Default: 2 tanks (for redundancy)</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Material Properties Card -->
-                <div class="card mb-4 border-0">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-atom me-2"></i>
-                            Material Properties (SS316L)
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="sd" class="form-label fw-bold">Design Stress (Sd)</label>
+                            <div class="col-md-4 mb-3">
+                                <label for="design_margin" class="form-label fw-bold">Design Margin</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="sd" 
-                                           name="sd" value="138" step="1" min="100" max="200">
-                                    <span class="input-group-text">MPa</span>
+                                    <input type="number" class="form-control" id="design_margin"
+                                           name="design_margin" value="10" step="1" min="0" max="50">
+                                    <span class="input-group-text">%</span>
                                 </div>
-                                <div class="form-text">Default: 138 MPa (SS316L at design temp)</div>
+                                <div class="form-text">Default: 10% (for future capacity)</div>
                             </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="st" class="form-label fw-bold">Test Stress (St)</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="st" 
-                                           name="st" value="207" step="1" min="150" max="300">
-                                    <span class="input-group-text">MPa</span>
-                                </div>
-                                <div class="form-text">Default: 207 MPa (SS316L hydro test)</div>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-info mt-3" role="alert" id="material-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Material Note:</strong> <span id="material-text">SS316L is recommended for acetic acid service due to 
-                            excellent corrosion resistance. Values shown are typical allowable stresses per API 650.</span>
                         </div>
                     </div>
                 </div>
@@ -203,14 +173,21 @@
             });
         }, false);
     })();
-    
+
     // Update chemical properties when selection changes
     function updateChemicalProperties() {
         const select = document.getElementById('chemical_select');
         const chemicalId = select.value;
-        
-        if (!chemicalId) return;
-        
+
+        if (!chemicalId) {
+            // Reset to default if no chemical is selected
+            document.getElementById('density').value = 1000;
+            document.getElementById('corrosion_allowance').value = 1.5;
+            document.getElementById('density-info').textContent = 'Default: 1000 kg/m³ (water)';
+            document.getElementById('corrosion-info').textContent = 'Default: 1.5mm';
+            return;
+        }
+
         fetch(`/get_chemical_properties/${chemicalId}`)
             .then(response => response.json())
             .then(data => {
@@ -218,21 +195,19 @@
                     // Update form fields
                     document.getElementById('density').value = data.density;
                     document.getElementById('corrosion_allowance').value = data.corrosion_allowance;
-                    
+
                     // Update info text
-                    document.getElementById('density-info').textContent = 
+                    document.getElementById('density-info').textContent =
                         `${data.density} kg/m³ (${data.name})`;
-                    document.getElementById('corrosion-info').textContent = 
+                    document.getElementById('corrosion-info').textContent =
                         `${data.corrosion_allowance}mm (${data.corrosivity} corrosivity)`;
-                    document.getElementById('material-text').textContent = 
-                        `${data.recommended_material} is recommended for ${data.name.toLowerCase()} service. Corrosivity: ${data.corrosivity}.`;
                 }
             })
             .catch(error => {
                 console.error('Error fetching chemical properties:', error);
             });
     }
-    
+
     // Load saved form data on page load
     document.addEventListener('DOMContentLoaded', function() {
         const savedData = localStorage.getItem('tankDesignFormData');
@@ -240,13 +215,13 @@
             const data = JSON.parse(savedData);
             Object.keys(data).forEach(key => {
                 const input = document.querySelector(`[name="${key}"]`);
-                if (input && !input.value) {
+                if (input && !input.value) { // Only fill if not already populated (e.g., by server)
                     input.value = data[key];
                 }
             });
         }
-        
-        // Auto-save form data
+
+        // Auto-save form data on input
         const form = document.querySelector('form');
         if (form) {
             form.addEventListener('input', function() {
@@ -261,3 +236,4 @@
     });
 </script>
 {% endblock %}
+

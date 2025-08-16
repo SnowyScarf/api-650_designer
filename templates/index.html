@@ -1,232 +1,93 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Acetic Acid Storage Tank Design Tool{% endblock %}
+{% block title %}API 650 Designer - Process Simulation for Everyone{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <!-- Hero Section -->
-    <div class="row align-items-center mb-5">
-        <div class="col-lg-8">
-            <h1 class="display-4 fw-bold text-primary mb-3">
-                <i class="fas fa-industry me-3"></i>
-                Acetic Acid Storage Tank Design Tool
-            </h1>
-            <p class="lead text-muted mb-4">
-                Professional engineering calculator for automated design of atmospheric storage tanks 
-                for concentrated acetic acid, following API 650 design standards.
-            </p>
-            <div class="d-grid d-md-block">
-                <a href="{{ url_for('design') }}" class="btn btn-primary btn-lg me-md-2">
-                    <i class="fas fa-calculator me-2"></i>
-                    Start Design
-                </a>
-                <a href="#features" class="btn btn-outline-secondary btn-lg">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Learn More
-                </a>
-            </div>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container text-center">
+        <!-- Image -->
+        <div class="mb-4">
+            <img src="{{ url_for('static', filename='images/tanks.jpg') }}" class="img-fluid rounded shadow-lg" alt="Storage Tanks at dusk" style="max-width: 900px; width: 100%;">
         </div>
-        <div class="col-lg-4 text-center">
-            <div class="bg-light rounded p-4" style="background: var(--bs-secondary-bg) !important;">
-                <!-- Tank SVG Illustration -->
-                <svg width="200" height="250" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Tank cylinder -->
-                    <rect x="50" y="50" width="100" height="150" fill="none" stroke="var(--bs-primary)" stroke-width="2"/>
-                    
-                    <!-- Tank top -->
-                    <ellipse cx="100" cy="50" rx="50" ry="8" fill="none" stroke="var(--bs-primary)" stroke-width="2"/>
-                    
-                    <!-- Tank bottom -->
-                    <ellipse cx="100" cy="200" rx="50" ry="8" fill="var(--bs-primary)" fill-opacity="0.1" stroke="var(--bs-primary)" stroke-width="2"/>
-                    
-                    <!-- Liquid level -->
-                    <rect x="50" y="80" width="100" height="110" fill="var(--bs-info)" fill-opacity="0.3"/>
-                    <ellipse cx="100" cy="80" rx="50" ry="8" fill="var(--bs-info)" fill-opacity="0.3" stroke="var(--bs-info)" stroke-width="1"/>
-                    
-                    <!-- Dimensions -->
-                    <text x="160" y="125" font-size="12" fill="var(--bs-secondary)">H</text>
-                    <text x="95" y="220" font-size="12" fill="var(--bs-secondary)">D</text>
-                    
-                    <!-- Dimension lines -->
-                    <line x1="155" y1="50" x2="155" y2="200" stroke="var(--bs-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
-                    <line x1="50" y1="215" x2="150" y2="215" stroke="var(--bs-secondary)" stroke-width="1" stroke-dasharray="2,2"/>
-                </svg>
-            </div>
-        </div>
-    </div>
 
-    <!-- Features Section -->
-    <div id="features" class="row mb-5">
-        <div class="col-12">
-            <h2 class="h3 fw-bold mb-4 text-center">Key Features</h2>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="text-primary mb-3">
-                        <i class="fas fa-calculator fa-3x"></i>
-                    </div>
-                    <h5 class="card-title">API 650 Calculations</h5>
-                    <p class="card-text text-muted">
-                        Automated shell thickness calculations using the One-Foot Method, 
-                        optimized for acetic acid service conditions.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="text-primary mb-3">
-                        <i class="fas fa-chart-line fa-3x"></i>
-                    </div>
-                    <h5 class="card-title">Interactive Charts</h5>
-                    <p class="card-text text-muted">
-                        Live visualization of how shell thickness varies with tank dimensions, 
-                        with exportable engineering charts.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="text-primary mb-3">
-                        <i class="fas fa-file-export fa-3x"></i>
-                    </div>
-                    <h5 class="card-title">Professional Reports</h5>
-                    <p class="card-text text-muted">
-                        Export detailed design reports in Excel and PDF formats 
-                        for engineering documentation and approvals.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Text -->
+        <h1 class="display-4 fw-bold">Tank Design Simulation </h1>
 
-    <!-- Technical Specifications -->
-    <div class="row mb-5">
-        <div class="col-lg-6">
-            <div class="card border-0">
-                <div class="card-body">
-                    <h5 class="card-title text-primary mb-3">
-                        <i class="fas fa-flask me-2"></i>
-                        Acetic Acid Properties
-                    </h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-info me-2"></i>
-                            <strong>Density:</strong> 1049 kg/m³ (concentrated)
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-info me-2"></i>
-                            <strong>Corrosivity:</strong> High (requires SS316L)
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-info me-2"></i>
-                            <strong>Storage:</strong> Atmospheric pressure tanks
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-info me-2"></i>
-                            <strong>Fill Factor:</strong> 85% maximum recommended
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-6">
-            <div class="card border-0">
-                <div class="card-body">
-                    <h5 class="card-title text-primary mb-3">
-                        <i class="fas fa-tools me-2"></i>
-                        Design Standards
-                    </h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-success me-2"></i>
-                            <strong>Code:</strong> API 650 (Latest Edition)
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-success me-2"></i>
-                            <strong>Material:</strong> SS316L Stainless Steel
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-success me-2"></i>
-                            <strong>Method:</strong> One-Foot Thickness Calculation
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-dot-circle text-success me-2"></i>
-                            <strong>Safety:</strong> 1.5mm Corrosion Allowance
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Logo Upload Section -->
-    <div class="row mb-5">
-        <div class="col-lg-8 mx-auto">
-            <div class="card border-0">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-image me-2"></i>
-                        Custom Branding
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('upload_logo') }}" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="company_name" class="form-label fw-bold">Company/College Name</label>
-                                <input type="text" class="form-control" id="company_name" name="company_name" 
-                                       value="{{ session.get('company_name', '') }}" placeholder="Enter your organization name">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="logo" class="form-label fw-bold">Upload Logo</label>
-                                <input type="file" class="form-control" id="logo" name="logo" accept=".png,.jpg,.jpeg,.gif">
-                                <div class="form-text">PNG, JPG, JPEG, or GIF (max 16MB)</div>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-warning">
-                                <i class="fas fa-upload me-2"></i>
-                                Upload Branding
-                            </button>
-                        </div>
-                    </form>
-                    
-                    {% if session.get('logo_path') %}
-                    <div class="mt-3 text-center">
-                        <p class="text-success mb-2">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Current branding: {{ session.get('company_name', 'Engineering Company') }}
-                        </p>
-                        <img src="{{ url_for('static', filename=session.get('logo_path')) }}" alt="Company Logo" 
-                             class="img-thumbnail" style="max-height: 100px;">
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Call to Action -->
-    <div class="text-center py-5 bg-primary rounded">
-        <div class="container">
-            <h3 class="text-white mb-3">Ready to Design Your Storage System?</h3>
-            <p class="text-white opacity-75 mb-4">
-                Input your process parameters and get professional tank specifications instantly.
-            </p>
-            <a href="{{ url_for('design') }}" class="btn btn-light btn-lg">
-                <i class="fas fa-play me-2"></i>
-                Start Tank Design
-            </a>
+        <!-- Button -->
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+            <a href="{{ url_for('design') }}" class="btn btn-primary btn-lg px-4">Design Now</a>
         </div>
     </div>
 </div>
+
+<!-- Product Features Section -->
+<div class="container px-4 py-5" id="product-features">
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-primary fs-2 mb-3">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="fs-2">API 650 Compliant</h3>
+            <p>Perform calculations based on the latest API 650 standard for welded tanks, ensuring your designs meet industry requirements.</p>
+        </div>
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-primary fs-2 mb-3">
+                <i class="fas fa-file-export"></i>
+            </div>
+            <h3 class="fs-2">Detailed Reporting</h3>
+            <p>Generate and download comprehensive design reports in PDF and CSV formats, complete with your company's branding.</p>
+        </div>
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-primary fs-2 mb-3">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="fs-2">Interactive Visualization</h3>
+            <p>Visualize your tank design with interactive diagrams and charts that update in real-time as you adjust parameters.</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODIFICATION START: Added Project Gallery Section -->
+<div class="bg-light">
+    <div class="container px-4 py-5" id="project-gallery">
+        <h2 class="text-center mb-5">Project Gallery</h2>
+        <div class="row g-4">
+            <!--
+                ACTION REQUIRED:
+                Save your uploaded images in the 'static/images/' folder with these exact filenames.
+            -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <!-- Image 1: Tank-farm.webp -->
+                    <img src="{{ url_for('static', filename='images/Tank-farm.webp') }}" class="card-img-top" alt="Aerial view of a large tank farm">
+                    <div class="card-body">
+                        <p class="card-text">Expansive tank farms .</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <!-- Image 2: MG_9194-scaled...jpg -->
+                    <img src="{{ url_for('static', filename='images/MG_9194-scaled...jpg') }}" class="card-img-top" alt="Tall industrial silos against a blue sky">
+                    <div class="card-body">
+                        <p class="card-text">Vertically integrated silos .</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <!-- Image 3: Gpi-tanks-on-location...jpg -->
+                    <img src="{{ url_for('static', filename='images/gallery-aerial.jpg') }}" class="card-img-top" alt="Aerial view of a chemical plant with tanks and cranes">
+                    <div class="card-body">
+                        <p class="card-text">Complex industrial sites .</p>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODIFICATION END -->
 {% endblock %}

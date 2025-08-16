@@ -1,29 +1,93 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="{{ session.get('theme', 'dark') }}">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Acetic Acid Storage Tank Design Tool{% endblock %}</title>
-    
-    <!-- Bootstrap CSS with dark theme -->
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
-    
+    <title>{% block title %}API 650 Designer{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Plotly.js for charts -->
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
-    
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Custom color palette and styles -->
+    <style>
+        :root {
+            --bs-primary: #0d6efd;
+            --bs-primary-rgb: 13, 110, 253;
+            --bs-body-bg: #ffffff;
+            --bs-body-color: #212529;
+            --bs-link-color: #0d6efd;
+            --bs-link-hover-color: #0a58ca;
+        }
+
+        .hero-section {
+            background-color: #f8f9fa;
+            color: var(--bs-body-color);
+            padding: 6rem 0;
+            margin-top: 56px; /* Ensures content starts below the fixed navbar */
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #000 !important;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-link {
+            color: #343a40 !important;
+            font-weight: 500;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--bs-primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: .75rem;
+            color: var(--bs-primary);
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        /* MODIFICATION START: Added hover animation for all buttons */
+        .btn {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        /* MODIFICATION END */
+    </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-industry me-2"></i>
-                Acetic Acid Tank Designer
+                API 650 Designer
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -41,8 +105,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('pfd') }}">
-                            <i class="fas fa-project-diagram me-1"></i>PFD
+                        <a class="nav-link" href="{{ url_for('sds') }}">
+                            <i class="fas fa-file-medical-alt me-1"></i>Safety Data
                         </a>
                     </li>
                     <li class="nav-item">
@@ -50,107 +114,15 @@
                             <i class="fas fa-balance-scale me-1"></i>Compare
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-users me-1"></i>Contact Us
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
-                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }} me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-
-    <!-- Unit Conversion Sidebar -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="unitConverter">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Unit Converter</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <!-- Volume Conversion -->
-            <div class="mb-4">
-                <h6 class="text-primary">Volume</h6>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="volume-m3" placeholder="m³">
-                    <span class="input-group-text">m³</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="volume-liters" placeholder="Liters">
-                    <span class="input-group-text">L</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="volume-gallons" placeholder="Gallons">
-                    <span class="input-group-text">gal</span>
-                </div>
-            </div>
-            
-            <!-- Mass Conversion -->
-            <div class="mb-4">
-                <h6 class="text-success">Mass</h6>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="mass-kg" placeholder="Kilograms">
-                    <span class="input-group-text">kg</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="mass-tonnes" placeholder="Tonnes">
-                    <span class="input-group-text">t</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="mass-pounds" placeholder="Pounds">
-                    <span class="input-group-text">lbs</span>
-                </div>
-            </div>
-            
-            <!-- Temperature Conversion -->
-            <div class="mb-4">
-                <h6 class="text-warning">Temperature</h6>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="temp-celsius" placeholder="Celsius">
-                    <span class="input-group-text">°C</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="temp-fahrenheit" placeholder="Fahrenheit">
-                    <span class="input-group-text">°F</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="temp-kelvin" placeholder="Kelvin">
-                    <span class="input-group-text">K</span>
-                </div>
-            </div>
-            
-            <!-- Pressure Conversion -->
-            <div class="mb-4">
-                <h6 class="text-info">Pressure</h6>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="pressure-bar" placeholder="Bar">
-                    <span class="input-group-text">bar</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="pressure-psi" placeholder="PSI">
-                    <span class="input-group-text">psi</span>
-                </div>
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="pressure-kpa" placeholder="kPa">
-                    <span class="input-group-text">kPa</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Unit Converter Toggle Button -->
-    <button class="btn btn-primary position-fixed bottom-0 end-0 m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#unitConverter">
-        <i class="fas fa-calculator me-1"></i>Units
-    </button>
 
     <!-- Main Content -->
     <main>
@@ -158,36 +130,37 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="bg-light text-center py-4 mt-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <p class="mb-1">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Based on API 650 Standard for Welded Tanks for Oil Storage
-                    </p>
-                    <p class="text-muted small mb-0">
-                        Professional engineering tool for acetic acid storage tank design
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <p class="mb-0">
-                        <i class="fas fa-shield-alt me-2"></i>
-                        SS316L Material Standards
-                    </p>
-                </div>
-            </div>
+            <p class="mb-0 text-muted">© 2025 API 650 Designer. All Rights Reserved.</p>
         </div>
     </footer>
 
+    <!-- Contact Us Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Our Team</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>This project was created by:</p>
+                    <p><strong>Samith, Rishab, Sarath, Akhil, Amit</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    
 
-    
     {% block scripts %}{% endblock %}
 </body>
 </html>
