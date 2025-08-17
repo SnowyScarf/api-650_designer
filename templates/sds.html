@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}MSDS of Ethyl Acetate - API 650 Designer{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-danger mb-3">
+            <i class="fas fa-file-medical-alt me-3"></i>
+            MSDS of Ethyl Acetate
+        </h1>
+        <p class="lead text-muted">
+            Ethyl Acetate (EAC) - CAS No. 141-78-6
+        </p>
+    </div>
+
+    <!-- Accordion for SDS Sections -->
+    <div class="accordion" id="sdsAccordion">
+
+        <!-- Section 1: Identification -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    <strong>1. Identification of the substance and supplier</strong>
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Trade Name</dt>
+                        <dd class="col-sm-9">Ethyl Acetate (EAC)</dd>
+                        <dt class="col-sm-3">Material Uses</dt>
+                        <dd class="col-sm-9">Solvent for coating, organic synthesis, polyurethane systems and pharmaceutical Industry.</dd>
+                        <dt class="col-sm-3">Supplier</dt>
+                        <dd class="col-sm-9">Asia Pacific Petrochemical Co., Ltd.</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Hazards Identification -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                    <strong>2. Hazards Identification</strong>
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/GHS-pictogram-flamme.svg/240px-GHS-pictogram-flamme.svg.png" alt="Flammable" class="img-fluid mb-2" style="max-height: 80px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/GHS-pictogram-exclam.svg/240px-GHS-pictogram-exclam.svg.png" alt="Exclamation Mark" class="img-fluid mb-2" style="max-height: 80px;">
+                            <p><strong>Signal Word:</strong> Warning</p>
+                        </div>
+                        <div class="col-md-8">
+                            <h5>GHS Classification</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item"><strong>Flammable liquids:</strong> Category 2</li>
+                                <li class="list-group-item"><strong>Eye irritation:</strong> Category 2</li>
+                                <li class="list-group-item"><strong>Specific target organ toxicity:</strong> Category 3</li>
+                            </ul>
+                            <h5 class="mt-3">Hazard Statements</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger"><strong>H225:</strong> Highly flammable liquid and vapour.</li>
+                                <li class="list-group-item list-group-item-warning"><strong>H319:</strong> Causes serious eye irritation.</li>
+                                <li class="list-group-item list-group-item-warning"><strong>H336:</strong> May cause drowsiness or dizziness.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3 & 4: Composition & First-aid -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                    <strong>3. Composition & 4. First-Aid Measures</strong>
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <h5>Composition</h5>
+                    <p><strong>Chemical Name:</strong> Ethyl ethanoate, <strong>CAS No:</strong> 141-78-6, <strong>UN No:</strong> 1173</p>
+                    <hr>
+                    <h5>First-Aid Measures</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Inhalation:</strong> Remove to fresh air. If breathing is difficult, give oxygen.</li>
+                        <li class="list-group-item"><strong>Skin Contact:</strong> Immediately flush skin with large amounts of water.</li>
+                        <li class="list-group-item"><strong>Eye Contact:</strong> Immediately flush eyes with large amounts of water for at least 10 minutes.</li>
+                        <li class="list-group-item"><strong>Ingestion:</strong> Do not induce vomiting. Transport to nearest medical facility.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5 & 6: Fire-fighting & Accidental Release -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                    <strong>5. Fire-Fighting & 6. Accidental Release Measures</strong>
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <h5>Fire-Fighting Measures</h5>
+                    <p><strong>Suitable Extinguishing Media:</strong> Water spray, dry chemical powder, alcohol-resistant foam, carbon dioxide.</p>
+                    <hr>
+                    <h5>Accidental Release Measures</h5>
+                    <p>Avoid contact with spilled material. Shut off leaks if possible. Remove all sources of ignition. Prevent from spreading or entering drains.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODIFICATION START: Added Handling and Storage Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                    <strong>7. Handling and Storage</strong>
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <h5>Handling</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Avoid contact with skin, eyes, and clothing. Do not breathe vapours.</li>
+                        <li class="list-group-item">Keep away from heat, sparks, and open flames. No smoking.</li>
+                        <li class="list-group-item">Ground and bond all containers and receiving equipment to prevent static discharge.</li>
+                        <li class="list-group-item">Use only non-sparking tools and explosion-proof equipment.</li>
+                        <li class="list-group-item">Handle and open containers with care in a well-ventilated area.</li>
+                    </ul>
+                    <hr>
+                    <h5>Storage</h5>
+                     <ul class="list-group">
+                        <li class="list-group-item">Store in a cool, dry, and well-ventilated area away from sunlight and ignition sources.</li>
+                        <li class="list-group-item">Keep containers tightly closed when not in use.</li>
+                        <li class="list-group-item">Store locked up and away from incompatible materials like oxidizing agents, strong acids, and strong alkalis.</li>
+                        <li class="list-group-item">Bulk storage tanks should be diked (bunded).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- MODIFICATION END -->
+
+        <!-- MODIFICATION START: Added Exposure Controls Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                    <strong>8. Exposure Controls and Personal Protection</strong>
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#sdsAccordion">
+                <div class="accordion-body">
+                    <h5>Engineering Controls</h5>
+                    <p>Provide exhaust ventilation or other engineering controls to keep the airborne concentrations of vapours below their respective threshold limit value.</p>
+                    <hr>
+                    <h5>Personal Protective Equipment (PPE)</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong><i class="fas fa-eye me-2"></i>Eye/Face Protection:</strong> Use chemical splash goggles or a full face shield where splashing is possible.</li>
+                        <li class="list-group-item"><strong><i class="fas fa-hands me-2"></i>Hand Protection:</strong> Wear impervious protective gloves (e.g., Butyl rubber, Neoprene).</li>
+                        <li class="list-group-item"><strong><i class="fas fa-lungs me-2"></i>Respiratory Protection:</strong> Use an approved vapor respirator if ventilation is inadequate or exposure limits are exceeded.</li>
+                        <li class="list-group-item"><strong><i class="fas fa-tshirt me-2"></i>Body Protection:</strong> Wear protective clothing which is chemical resistant to this material. Safety shoes and boots should also be chemical resistant.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- MODIFICATION END -->
+
+    </div>
+</div>
+{% endblock %}
