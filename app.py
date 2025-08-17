@@ -9,11 +9,18 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+# MODIFICATION START: Import WhiteNoise
+from whitenoise import WhiteNoise
+# MODIFICATION END
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
+# MODIFICATION START: Enable WhiteNoise to serve static files
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
+# MODIFICATION END
+
 app.secret_key = os.environ.get("SESSION_SECRET", "a-very-secret-key")
 
 # Initialize chemical database
@@ -160,8 +167,6 @@ def clear_cases():
     flash('All saved cases cleared!', 'success')
     return redirect(url_for('design'))
 
-# --- MODIFICATION START ---
-# The export_pdf function has been fully restored.
 @app.route('/export/pdf')
 def export_pdf():
     """Export tank design results to PDF format."""
@@ -181,7 +186,6 @@ def export_pdf():
         elements.append(Paragraph("Storage Tank Design Report", styles['Title']))
         elements.append(Spacer(1, 20))
 
-        # Design parameters table
         param_data = [
             ['Parameter', 'Value', 'Standard/Source'],
             ['Production Rate', f"{inputs.get('production_rate', '')} TPD", 'User Input'],
@@ -205,7 +209,6 @@ def export_pdf():
         elements.append(param_table)
         elements.append(Spacer(1, 20))
 
-        # Tank specifications table
         tank_data = [['Tank No', 'Chemical', 'Capacity (m³)', 'Diameter (m)', 'Height (m)', 'Shell Thickness (mm)']]
         for tank in results.get('tank_specifications', []):
             tank_data.append([
@@ -243,7 +246,6 @@ def export_pdf():
         logging.error(f"PDF export error: {str(e)}")
         flash('Error generating PDF file.', 'error')
         return redirect(url_for('results_page'))
-# --- MODIFICATION END ---
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
